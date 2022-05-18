@@ -27,8 +27,7 @@ roformer = build_transformer_model(
 # seq2seq = keras.models.Model(roformer.inputs, roformer.outputs[1])
 
 roformer.summary()
-for layer in roformer.layers:
-    print(layer.name)
+
 
 class SynonymsGenerator(AutoRegressiveDecoderV2):
     """seq2seq解码器
@@ -39,7 +38,6 @@ class SynonymsGenerator(AutoRegressiveDecoderV2):
         token_ids = np.concatenate([token_ids, output_ids], 1)
         segment_ids = np.concatenate([segment_ids, np.ones_like(output_ids)], 1)
         ret = self.last_token(roformer).predict([token_ids, segment_ids])
-        print(ret.shape)
         return ret
 
     def generate(self, text, n=1, topp=0.95, mask_idxs=[]):

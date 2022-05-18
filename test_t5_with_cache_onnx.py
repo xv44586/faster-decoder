@@ -75,9 +75,7 @@ class Inference(AutoRegressiveDecoderV2):
             for c in output_caches:
                 cur_cache.extend([c, c])
             self.cache_outputs = [np.concatenate([c, o], axis=1) for c, o in zip(self.cache_outputs, cur_cache)]
-        # print(output_ids)
-        # print(output_logits.shape)
-        np.save('/tmp/online-{}-decoded.npy'.format(len(output_ids[0])), output_logits)
+
         return output_logits[:,-1]
 
     def generate(self, text, n=1, topk=1, topp=1):

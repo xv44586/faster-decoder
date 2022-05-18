@@ -25,7 +25,6 @@ tokenizer = Tokenizer(dict_path, do_lower_case=True)  # 建立分词器
 
 # # 建立加载模型
 roformer = build_roformer_unilm_with_cache_model(config_path, checkpoint_path)
-print(roformer.outputs)
 
 class SynonymsGenerator(AutoRegressiveDecoderV2):
     """seq2seq解码器, 当模型含有attention cache 时，因为模型是unilm，所以第一次时使用所有inputs 进行解码，剩余时间都使用output_ids 的最后一个时刻
