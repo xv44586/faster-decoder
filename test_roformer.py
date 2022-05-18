@@ -1,9 +1,11 @@
 import numpy as np
+
 from bert4keras.backend import keras, K
-from models import build_transformer_model
 from bert4keras.tokenizers import Tokenizer
 from bert4keras.snippets import sequence_padding
+
 from snippets import AutoRegressiveDecoderV2
+from models import build_transformer_model
 
 maxlen = 64
 
@@ -22,12 +24,7 @@ roformer = build_transformer_model(
     model='roformer',
     application='unilm',
 )
-
-# encoder = keras.models.Model(roformer.inputs, roformer.outputs[0])
-# seq2seq = keras.models.Model(roformer.inputs, roformer.outputs[1])
-
 roformer.summary()
-
 
 class SynonymsGenerator(AutoRegressiveDecoderV2):
     """seq2seq解码器
@@ -51,25 +48,5 @@ class SynonymsGenerator(AutoRegressiveDecoderV2):
 synonyms_generator = SynonymsGenerator(
     start_id=None, end_id=tokenizer._token_end_id, maxlen=maxlen
 )
-
-
-def gen_synonyms(text, n=100, k=20, mask_idxs=[]):
-    ''''含义： 产生sent的n个相似句，然后返回最相似的k个。
-    做法：用seq2seq生成，并用encoder算相似度并排序。
-    '''
-    r = synonyms_generator.generate(text, n, mask_idxs=mask_idxs)
-    r = [i for i in set(r) if i != text]
-    r = [text] + r
-    X, S = [], []
-    for t in r:
-        x, s = tokenizer.encode(t)
-        X.append(x)
-        S.append(s)
-    X = sequence_padding(X)
-    S = sequence_padding(S)
-    Z = roformer.predict([X, S])
-    Z /= (Z**2).sum(axis=1, keepdims=True)**0.5
-    argsort = np.dot(Z[1:], -Z[0]).argsort()
-    return [r[i + 1] for i in argsort[:k]]
 
 print(synonyms_generator.generate(u'广州今天的天气如何', n=1))

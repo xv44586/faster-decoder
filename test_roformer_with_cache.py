@@ -1,13 +1,13 @@
 import numpy as np
-from bert4keras.backend import keras, K
+import json
 
+from bert4keras.backend import keras, K
 from bert4keras.tokenizers import Tokenizer
 from bert4keras.snippets import sequence_padding, string_matching
-from snippets import AutoRegressiveDecoderV2
-import json
 from bert4keras.layers import Input, Dropout, LayerNormalization
 
 from models import build_roformer_unilm_with_cache_model
+from snippets import AutoRegressiveDecoderV2
 
 
 maxlen = 64
@@ -17,13 +17,14 @@ config_path = '/data/pretrain/chinese_roformer-sim-char-ft_L-12_H-768_A-12/bert_
 checkpoint_path = '/data/pretrain/chinese_roformer-sim-char-ft_L-12_H-768_A-12/bert_model.ckpt'
 dict_path = '/data/pretrain/chinese_roformer-sim-char-ft_L-12_H-768_A-12/vocab.txt'
 
-num_hidden_layers = 12
-hidden_size = 768
+config = json.load(open(config_path))
+num_hidden_layers = config['num_hidden_layers']
+hidden_size = config['hidden_size']
 
 # 建立分词器
 tokenizer = Tokenizer(dict_path, do_lower_case=True)  # 建立分词器
 
-# # 建立加载模型
+# 建立加载模型
 roformer = build_roformer_unilm_with_cache_model(config_path, checkpoint_path)
 
 class SynonymsGenerator(AutoRegressiveDecoderV2):
@@ -71,7 +72,7 @@ class SynonymsGenerator(AutoRegressiveDecoderV2):
 
         ret = roformer.predict(cur_inputs)
         output_logits = ret[0] if with_cache else ret 
-        # import pdb;pdb.set_trace()
+        
         if with_cache:
             # build cache
             output_caches = ret[1:]

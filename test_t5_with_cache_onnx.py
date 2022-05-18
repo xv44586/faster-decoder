@@ -1,13 +1,11 @@
 import jieba
 import json
 import numpy as np
-from itertools import chain
 
 from bert4keras.tokenizers import Tokenizer
 import onnxruntime as rt
 
 from snippets import AutoRegressiveDecoderV2
-
 
 
 max_c_len = 128

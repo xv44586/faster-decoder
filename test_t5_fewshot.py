@@ -1,10 +1,9 @@
-
-from bert4keras.tokenizers import Tokenizer
 import jieba
 import json
-from snippets import AutoRegressiveDecoderV2
-from itertools import chain
 
+from bert4keras.tokenizers import Tokenizer
+
+from snippets import AutoRegressiveDecoderV2
 from models import *
 
 max_c_len = 256
@@ -94,6 +93,8 @@ class Inference(AutoRegressiveDecoderV2):
 inference = Inference(t5_encoder, t5_decoder, with_cache=False)
 inference_with_cache = Inference(t5_encoder, t5_decoder_with_cache, with_cache=True)
 
-sent = '预训练任务模仿了PEGASUS的摘要式预训练。具体来说，假设一个文档有n个句子，我们从中挑出大约n/4个句子（可以不连续），使得这n/4个句子拼起来的文本，跟剩下的3n/4个句子拼起来的文本，最长公共子序列尽可能长，然后我们将3n/4个句子拼起来的文本视为原文，n/4个句子拼起来的文本视为摘要，通过这样的方式构成一个“(原文, 摘要)”的伪摘要数据对。'
+sent = '''预训练任务模仿了PEGASUS的摘要式预训练。具体来说，假设一个文档有n个句子，我们从中挑出大约n/4个句子（可以不连续），使得这n/4个句子拼起来的文本，
+          跟剩下的3n/4个句子拼起来的文本，最长公共子序列尽可能长，然后我们将3n/4个句子拼起来的文本视为原文，n/4个句子拼起来的文本视为摘要，
+          通过这样的方式构成一个“(原文, 摘要)”的伪摘要数据对。'''
 print(inference_with_cache.generate(sent))
 print(inference.generate(sent))
