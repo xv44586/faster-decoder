@@ -1,0 +1,6 @@
+jieba
+bert4keras==0.10.8
+tensorflow-gpu==1.15.0
+tf2onnx
+tqdm
+onnxruntime-gpu==1.9  # https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements
