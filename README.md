@@ -1,6 +1,8 @@
 # 加速decoder 解码
 通过添加 attention cache 并转换为 onnx，加速线上解码速度。当前 repo 以[simbert](https://github.com/ZhuiyiTechnology/simbert) 和[t5-pegasus](https://github.com/ZhuiyiTechnology/t5-pegasus) 为例。
 
+详细博文介绍：[decoder 解码加速](https://xv44586.github.io/2022/05/23/faster-decoder/)
+
 # 使用方法
 ## t5-pegasus
 1. 首先将t5_encoder/t5_decoder 转为onnx
